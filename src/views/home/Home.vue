@@ -4,12 +4,13 @@
       <div slot="center">购物车</div>
     </nav-bar>
     <home-swiper :banners="banners" />
+    <recommend-view :recommends="recommends" />
   </div>
 </template>
 
 <script>
 import NavBar from "components/common/navbar/NavBar";
-import HomeSwiper from './childComps/HomeSwiper'
+import {HomeSwiper,RecommendView} from './childComps/index.js';
 
 
 import home from "network/home.js";
@@ -18,11 +19,13 @@ import home from "network/home.js";
     name: "Home",
     components: {
       NavBar,
-      HomeSwiper
+      HomeSwiper,
+      RecommendView
     },
     data(){
       return {
-        banners:[]
+        banners:[],
+        recommends:[]
       }
     },
     computed: {
@@ -33,6 +36,7 @@ import home from "network/home.js";
     created() {
       // 组件加载完成后，加载数据。
       this.getHomeMultidata();
+      this.getRecommends();
     },
     methods: {
       getHomeMultidata() {
@@ -46,6 +50,13 @@ import home from "network/home.js";
           });
 
       },
+      getRecommends(){
+        home.getRecommends()
+          .then(res => {
+            this.recommends = res.data.recommend.list;
+          })
+        
+      }
     }
   }
 </script>
