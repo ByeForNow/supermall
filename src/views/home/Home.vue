@@ -1,26 +1,28 @@
 <template>
   <div id="home" class="wrapper">
-    这是home
+    <nav-bar class="home-nav">
+      <div slot="center">购物车</div>
+    </nav-bar>
+    <home-swiper :banners="banners" />
   </div>
 </template>
 
 <script>
+import NavBar from "components/common/navbar/NavBar";
+import HomeSwiper from './childComps/HomeSwiper'
+
+
+import home from "network/home.js";
 
   export default {
     name: "Home",
     components: {
+      NavBar,
+      HomeSwiper
     },
-    data() {
+    data(){
       return {
-        banners: [],
-        recommends: [],
-        goods: {
-          'pop': {page: 0, list: []},
-          'new': {page: 0, list: []},
-          'sell': {page: 0, list: []},
-        },
-        currentType: 'pop',
-        isShowBackTop: false
+        banners:[]
       }
     },
     computed: {
@@ -29,10 +31,21 @@
       }
     },
     created() {
-      
+      // 组件加载完成后，加载数据。
+      this.getHomeMultidata();
     },
     methods: {
-      
+      getHomeMultidata() {
+        var a = home.getHomeMultidata()
+          .then(res => {
+            console.log(res)
+            this.banners = res;
+          })
+          .catch(res => {
+            console.log(res)
+          });
+
+      },
     }
   }
 </script>
