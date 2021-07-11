@@ -5,12 +5,30 @@
     </nav-bar>
     <home-swiper :banners="banners" />
     <recommend-view :recommends="recommends" />
+    <feature-view />
+    <tab-control :titles="['流行', '新款', '精选']" @tabClick="tabClick"/>
+    <goods-list :goods="showGoods" />
+    <input type="button" value="获取新数据" @click="getMoreGoods" />
+    <ul>
+      <li>11</li>
+      <li>11</li>
+      <li>11</li>
+      <li>11</li>
+      <li>11</li>
+      <li>11</li>
+      <li>11</li>
+      <li>11</li>
+      <li>11</li>
+      <li>11</li>
+    </ul>
   </div>
 </template>
 
 <script>
 import NavBar from "components/common/navbar/NavBar";
-import {HomeSwiper,RecommendView} from './childComps/index.js';
+import {HomeSwiper,RecommendView,FeatureView} from './childComps/index.js';
+import TabControl from "components/content/tabControl/TabControl";
+import GoodsList from "components/content/goodsList/GoodsList";
 
 
 import home from "network/home.js";
@@ -20,25 +38,67 @@ import home from "network/home.js";
     components: {
       NavBar,
       HomeSwiper,
-      RecommendView
+      RecommendView,
+      FeatureView,
+      TabControl,
+      GoodsList
     },
     data(){
       return {
         banners:[],
-        recommends:[]
+        recommends:[],
+        goods:{
+          pop:{
+            page:0,
+            list:[]
+          },
+          new:{
+            page:0,
+            list:[]
+          },
+          default:{
+            page:0,
+            list:[]
+          },
+        },
+        currentType:"pop"
       }
     },
     computed: {
       showGoods() {
-        
+        return this.goods[this.currentType].list
       }
     },
     created() {
-      // 组件加载完成后，加载数据。
+      // 获取图片
       this.getHomeMultidata();
+      // 获取推荐数据
       this.getRecommends();
+      // 获取推荐商品
+      this.getHomeGoods("pop");
+      this.getHomeGoods("new");
+      this.getHomeGoods("default");
     },
     methods: {
+      /**
+       * 事件监听相关的方法
+       */
+      tabClick(index) {
+        switch (index) {
+          case 0:
+            this.currentType = 'pop'
+            break
+          case 1:
+            this.currentType = 'new'
+            break
+          case 2:
+            this.currentType = 'default'
+            break
+        }
+      },
+      getMoreGoods(){
+        this.getHomeGoods(this.currentType);
+      },
       getHomeMultidata() {
         var a = home.getHomeMultidata()
           .then(res => {
@@ -55,7 +115,15 @@ import home from "network/home.js";
           .then(res => {
             this.recommends = res.data.recommend.list;
           })
-        
+      },
+      getHomeGoods(type){
+        const page = this.goods[type].page;
+
+        home.getHomeGoods(type,page)
+          .then(res => {
+            this.goods[type].page = page+1;
+            this.goods[type].list.push(...res);
+          })
       }
     }
   }
@@ -63,8 +131,7 @@ import home from "network/home.js";
 
 <style scoped>
   #home {
-    /*padding-top: 44px;*/
-    height: 100vh;
+    padding-top: 44px;
     position: relative;
   }
 

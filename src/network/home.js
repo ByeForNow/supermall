@@ -1,15 +1,16 @@
-import { request } from "./request";
+import request from "./request";
 
 export default {
     getHomeMultidata(){
-        return request({
-            url:"/home/multidata"
-        });
+        return request.get("http://localhost:8000/home/multidata");
     },
     getRecommends(){
-        return request({
-            baseURL:'http://123.207.32.32:8000',
-            url:"/home/multidata"
+        return request.get("http://123.207.32.32:8000/home/multidata");
+    },
+    getHomeGoods(type,page){
+        return request.get("http://localhost:8000/home/getGoodsList",{
+            type,
+            page
         });
     }
 } 
