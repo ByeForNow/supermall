@@ -3,11 +3,13 @@
     <nav-bar class="home-nav">
       <div slot="center">购物车</div>
     </nav-bar>
-    <home-swiper :banners="banners" />
-    <recommend-view :recommends="recommends" />
-    <feature-view />
-    <tab-control :titles="['流行', '新款', '精选']" @tabClick="tabClick"/>
-    <goods-list :goods="showGoods" />
+    <scroll ref="scroll" style="height:600px; overflow:hidden" :pullUpload="true" @pullingUp="pullingUp">
+      <home-swiper :banners="banners" />
+      <recommend-view :recommends="recommends" />
+      <feature-view />
+      <tab-control :titles="['流行', '新款', '精选']" @tabClick="tabClick"/>
+      <goods-list :goods="showGoods" />
+    </scroll>
     <input type="button" value="获取新数据" @click="getMoreGoods" />
     <ul>
       <li>11</li>
@@ -29,7 +31,7 @@ import NavBar from "components/common/navbar/NavBar";
 import {HomeSwiper,RecommendView,FeatureView} from './childComps/index.js';
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goodsList/GoodsList";
-
+import Scroll from "components/common/scroll/Scroll";
 
 import home from "network/home.js";
 
@@ -41,7 +43,8 @@ import home from "network/home.js";
       RecommendView,
       FeatureView,
       TabControl,
-      GoodsList
+      GoodsList,
+      Scroll
     },
     data(){
       return {
@@ -96,13 +99,17 @@ import home from "network/home.js";
             break
         }
       },
+      pullingUp(){
+        console.log("ssss");
+        this.getMoreGoods();
+        this.$refs.scroll.finishPullUp();
+      },
       getMoreGoods(){
         this.getHomeGoods(this.currentType);
       },
       getHomeMultidata() {
         var a = home.getHomeMultidata()
           .then(res => {
-            console.log(res)
             this.banners = res;
           })
           .catch(res => {

@@ -28,7 +28,6 @@ function request(config) {
 }
 
 function get(url, params) {
-console.log(baseURL)
 
   return new Promise((resolve, reject) => {
     axios.get(url, {
