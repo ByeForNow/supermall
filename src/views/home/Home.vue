@@ -3,26 +3,15 @@
     <nav-bar class="home-nav">
       <div slot="center">购物车</div>
     </nav-bar>
-    <scroll ref="scroll" style="height:600px; overflow:hidden" :pullUpload="true" @pullingUp="pullingUp">
+    <scroll ref="scroll" style="height:710px; overflow:hidden" :pullUpload="true" @pullingUp="pullingUp"
+      :probe-type="3" @scroll="scroll">
       <home-swiper :banners="banners" />
       <recommend-view :recommends="recommends" />
       <feature-view />
       <tab-control :titles="['流行', '新款', '精选']" @tabClick="tabClick"/>
       <goods-list :goods="showGoods" />
     </scroll>
-    <input type="button" value="获取新数据" @click="getMoreGoods" />
-    <ul>
-      <li>11</li>
-      <li>11</li>
-      <li>11</li>
-      <li>11</li>
-      <li>11</li>
-      <li>11</li>
-      <li>11</li>
-      <li>11</li>
-      <li>11</li>
-      <li>11</li>
-    </ul>
+    <back-top @click.native="backTopClick" v-show="backtopDisplay" />
   </div>
 </template>
 
@@ -32,6 +21,7 @@ import {HomeSwiper,RecommendView,FeatureView} from './childComps/index.js';
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goodsList/GoodsList";
 import Scroll from "components/common/scroll/Scroll";
+import BackTop from "components/common/backTop/BackTop"
 
 import home from "network/home.js";
 
@@ -44,7 +34,8 @@ import home from "network/home.js";
       FeatureView,
       TabControl,
       GoodsList,
-      Scroll
+      Scroll,
+      BackTop
     },
     data(){
       return {
@@ -64,7 +55,8 @@ import home from "network/home.js";
             list:[]
           },
         },
-        currentType:"pop"
+        currentType:"pop",
+        backtopDisplay:false
       }
     },
     computed: {
@@ -100,9 +92,20 @@ import home from "network/home.js";
         }
       },
       pullingUp(){
-        console.log("ssss");
         this.getMoreGoods();
         this.$refs.scroll.finishPullUp();
+      },
+      backTopClick(){
+        this.$refs.scroll.scrollToTop();
+      },
+      scroll(position){
+        console.log(position);
+
+        if(position.y<=-400){
+          this.backtopDisplay = true;
+        }else{
+          this.backtopDisplay = false;
+        }
       },
       getMoreGoods(){
         this.getHomeGoods(this.currentType);

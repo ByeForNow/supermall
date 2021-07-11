@@ -1,7 +1,7 @@
 <!--  -->
 <template>
-    <div>
-        
+    <div class="back-top">
+        <img src="~assets/img/common/top.png" />
     </div>
 </template>
 
@@ -52,5 +52,17 @@ export default {
 </script>
 
 <style scoped>
+    .back-top
+    {
+        z-index: 9;
+        position: fixed;
+        right: 10px;
+        bottom: 60px;
+    }
 
+    .back-top img
+    {
+        width:40px;
+        height:40px;
+    }
 </style>

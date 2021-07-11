@@ -12,62 +12,59 @@
 import BScroll from "better-scroll";
 
 export default {
-  name:'Scroll',
+  name: "Scroll",
   //在components中注册组件
   components: {
-    BScroll
+    BScroll,
   },
   //在props中对外暴露属性
   props: {
-    probeType:{
-      type:Number,
-      default:0
+    probeType: {
+      type: Number,
+      default: 0,
     },
-    pullUpload:{
-      type:Boolean,
-      default:false
-    }
+    pullUpload: {
+      type: Boolean,
+      default: false,
+    },
   },
   //data里存放数据
   data() {
     return {
       scroll: null,
-      message:"到底了。"
+      message: "到底了。",
     };
   },
   //方法集合
   methods: {
-    
-    scrollTo(x, y, time=300) {
-      this.scroll.scrollTo(x, y, time)
+    scrollTo(x, y, time = 300) {
+      this.scroll.scrollTo(x, y, time);
     },
     scrollToTop() {
-      this.scroll.scrollTo(x, y, time)
+      this.scroll.scrollTo(0, 0, 300);
     },
-    finishPullUp(){
-      this.scroll.finishPullUp()
-    }
+    finishPullUp() {
+      this.scroll.finishPullUp();
+    },
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-    this.scroll = new BScroll(this.$refs.wrapper,{
-      click:true,
-      probeType:this.probeType,
-      pullUpLoad:this.pullUpload
+    this.scroll = new BScroll(this.$refs.wrapper, {
+      click: true,
+      probeType: this.probeType,
+      pullUpLoad: this.pullUpload,
     });
 
-    this.scroll.on("scroll",position => {
-      this.$emit("scroll",position);
+    this.scroll.on("scroll", (position) => {
+      this.$emit("scroll", position);
     });
 
-    this.scroll.on('pullingUp', () => {
-        this.$emit('pullingUp')
-      })
-
+    this.scroll.on("pullingUp", () => {
+      this.$emit("pullingUp");
+    });
   },
-}
+};
 </script>
 
 <style scoped>
-
 </style>
