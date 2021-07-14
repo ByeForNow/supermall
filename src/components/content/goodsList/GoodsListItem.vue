@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <div class="goods-item">
+  <div class="goods-item" @click="itemClick">
     <img :src="goodsItem.img" />
     <div class="goods-info">
       <p>{{ goodsItem.title }}</p>
@@ -30,7 +30,18 @@ export default {
     return {};
   },
   //方法集合
-  methods: {},
+  methods: {
+    itemClick(){
+
+      console.log(this.$router)
+      this.$router.push({
+        name:"detail",
+        query:{
+          id:this.goodsItem.id
+        }
+      })
+    }
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
